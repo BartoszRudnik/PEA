@@ -23,8 +23,10 @@ public class FullSearch {
         int s = 0;
         int count = 0;
         int shortestPath = Integer.MAX_VALUE;
-        int numberOfPermutations = numberOfPermutations(v);
+        long numberOfPermutations = numberOfPermutations(v);
         int data[] = new int[v - 1];
+        StringBuilder tmp = null;
+        StringBuilder path = null;
 
         for(int i = 0; i < v; i++){
 
@@ -35,25 +37,41 @@ public class FullSearch {
 
         }
 
-        for(int i = 0; i < numberOfPermutations; i++){
+        for(long i = 0; i < numberOfPermutations; i++){
 
             int actualPath = 0;
             int k = s;
 
+            tmp = new StringBuilder();
+
+            tmp.append(k);
+            tmp.append('-');
+
             for(int j = 0; j < data.length; j++){
+
+                tmp.append(data[j]);
+                tmp.append('-');
+
                 actualPath += graph[k][data[j]];
                 k = data[j];
+
             }
             actualPath += graph[k][s];
 
-            if(i < numberOfPermutations - 1)
-                data = permutation(data);
+            tmp.append(s);
 
-            if(actualPath < shortestPath)
+            if(i < numberOfPermutations - 1) {
+                data = permutation(data);
+            }
+
+            if(actualPath < shortestPath) {
                 shortestPath = actualPath;
+                path = tmp;
+            }
 
         }
 
+        System.out.println("Path: " + path);
         return shortestPath;
 
     }
@@ -132,12 +150,12 @@ public class FullSearch {
 
     }
 
-    public int numberOfPermutations(int n){
+    public long numberOfPermutations(int n){
 
         if(n < 1)
             return 0;
 
-        int result = 1;
+        long result = 1;
 
         for(int i = 2; i <= n - 1; i++)
             result *= i;
