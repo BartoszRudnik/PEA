@@ -24,7 +24,7 @@ public class FullSearch {
         int count = 0;
         int shortestPath = Integer.MAX_VALUE;
         int numberOfPermutations = numberOfPermutations(v);
-        int data[] = new int[v];
+        int data[] = new int[v - 1];
 
         for(int i = 0; i < v; i++){
 
@@ -40,13 +40,14 @@ public class FullSearch {
             int actualPath = 0;
             int k = s;
 
-            for(int j = 0; j < v; j++){
+            for(int j = 0; j < data.length; j++){
                 actualPath += graph[k][data[j]];
                 k = data[j];
             }
             actualPath += graph[k][s];
 
-            data = permutation(data);
+            if(i < numberOfPermutations - 1)
+                data = permutation(data);
 
             if(actualPath < shortestPath)
                 shortestPath = actualPath;
@@ -138,7 +139,7 @@ public class FullSearch {
 
         int result = 1;
 
-        for(int i = 1; i <= n - 1; i++)
+        for(int i = 2; i <= n - 1; i++)
             result *= i;
 
         return result;
