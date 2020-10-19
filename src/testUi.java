@@ -67,6 +67,7 @@ public class testUi {
                     if(fullSearch.checkGraph(graph)){
 
                         System.out.println(fullSearch.algorithm(graph));
+                        fullSearch.getResultPath();
 
                     }
                     else{

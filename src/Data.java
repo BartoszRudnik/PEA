@@ -14,6 +14,28 @@ public class Data {
         return this.v;
     }
 
+    public void saveResult(String fileName, long tab[]){
+
+        try{
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter(fileName,true));
+
+            for(int i = 0; i < tab.length; i++){
+
+                bw.write(Long.toString(tab[i]));
+                bw.newLine();
+
+            }
+
+            bw.close();
+
+
+        } catch (IOException e) {
+            e.getMessage();
+        }
+
+    }
+
     public void printData(){
 
         if(graph != null){

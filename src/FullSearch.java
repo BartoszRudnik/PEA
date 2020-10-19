@@ -5,6 +5,7 @@ import java.util.Queue;
 public class FullSearch {
 
     private int v;
+    private StringBuilder path = null;
 
     public void setV(int v){
         this.v = v;
@@ -26,7 +27,6 @@ public class FullSearch {
         long numberOfPermutations = numberOfPermutations(v);
         int data[] = new int[v - 1];
         StringBuilder tmp = null;
-        StringBuilder path = null;
 
         for(int i = 0; i < v; i++){
 
@@ -71,8 +71,16 @@ public class FullSearch {
 
         }
 
-        System.out.println("Path: " + path);
         return shortestPath;
+
+    }
+
+    public void getResultPath(){
+
+        if(path != null)
+            System.out.println(path);
+        else
+            System.out.println("Nie wyznaczono jeszcze sciezki");
 
     }
 
