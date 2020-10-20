@@ -47,32 +47,34 @@ public class BranchBound {
         }
 
         visited = new boolean[v];
-        int[][] newGraph = new int[v][v];
-        int[][] tmpResult = new int[v][v];
-
-        for(int i = 0; i < v; i++){
-            for(int j = 0; j < v; j++)
-                tmpResult[i][j] = -1;
-        }
 
         int tmp = actualCost;
         int[][] levelGraph = copyGraph(graph);
 
-        levelAlgorithm(levelGraph,tmp,tmpResult);
+        startVertex = 0;
+        visited = new boolean[v];
+        visited[0] = true;
 
-        return tmp;
+        System.out.print("0 ");
+        levelAlgorithm(levelGraph, tmp, level, startVertex);
+        System.out.println("0");
+
+        return resultCost;
 
     }
 
-    private void levelAlgorithm(int[][] levelGraph, int tmp, int[][] tmpResult){
+    private void levelAlgorithm(int[][] levelGraph, int tmp, int level, int startVertex){
 
         if(level >= 1 && level < v){
+
+            int tmpResult = Integer.MAX_VALUE;
+            int index = 0;
 
             for(int i = 1; i < v; i++){
 
                 if(visited[i] == false) {
 
-                    int [][] newGraph = new int[v][v];
+                    int [][] newGraph;
                     newGraph = copyGraph(levelGraph);
                     actualCost = tmp;
 
@@ -81,62 +83,60 @@ public class BranchBound {
                         newGraph[j][i] = -1;
                     }
 
-                    for (int k = 0; k < v; k++)
-                        newGraph[i][k] = -1;
-
                     newGraph[i][startVertex] = -1;
 
-                    if (areRowsReduced(newGraph) == false)
-                        actualCost += reduceRows(newGraph);
-                    if (areColumnsReduced(newGraph) == false)
-                        actualCost += reduceColumns(newGraph);
+                    actualCost += reduceRows(newGraph);
+                    actualCost += reduceColumns(newGraph);
+                    actualCost += levelGraph[startVertex][i];
 
-                    actualCost += graph[startVertex][i];
-
-                    tmpResult[level][i] = actualCost;
+                    if(actualCost < tmpResult){
+                        tmpResult = actualCost;
+                        index = i;
+                    }
 
                 }
 
-            }
-
-            int mini = Integer.MAX_VALUE;
-            int index = 0;
-
-            for(int i = 0; i < v; i++){
-                if(tmpResult[level][i] < mini && tmpResult[level][i] != -1) {
-                    mini = tmpResult[level][i];
-                    index = i;
-                }
             }
 
             visited[index] = true;
-            tmp = mini;
+            tmp = tmpResult;
 
-            System.out.println(startVertex + " " + index);
+            System.out.print((index) + " ");
 
             for (int j = 0; j < v; j++) {
                 levelGraph[startVertex][j] = -1;
                 levelGraph[j][index] = -1;
             }
 
+            levelGraph[index][startVertex] = -1;
+
+            reduceRows(levelGraph);
+            reduceColumns(levelGraph);
+
             level++;
             startVertex = index;
-            levelAlgorithm(levelGraph,tmp,tmpResult);
+            levelAlgorithm(levelGraph,tmp, level, startVertex);
 
         }
-
-        for(int i = 1; i < v; i++) {
-
-            if(visited[i] == false) {
-                tmp += graph[startVertex][0];
-            }
+        else{
+            resultCost = tmp;
+            return;
         }
+
 
     }
 
-    private int[][] copyGraph(int [][] newGraph){
+    private int[][] copyGraph(int [][] oldGraph){
 
-        newGraph = this.graph;
+        int[][] newGraph = new int[v][v];
+        
+        for(int i = 0; i < v; i++){
+
+            for(int j = 0; j < v; j++){
+                newGraph[i][j] = oldGraph[i][j];
+            }
+
+        }
 
         return newGraph;
 
@@ -202,7 +202,7 @@ public class BranchBound {
     public int reduceRows(int [][] inputGraph){
 
         int sumRows = 0;
-        int minValue = Integer.MAX_VALUE;
+        int minValue;
 
         for(int i = 0; i < v; i++){
 
@@ -215,13 +215,17 @@ public class BranchBound {
 
             }
 
-            for(int k = 0; k < v; k++){
+            if(minValue != Integer.MAX_VALUE) {
 
-                inputGraph[i][k] -= minValue;
+                for (int k = 0; k < v; k++) {
+
+                    inputGraph[i][k] -= minValue;
+
+                }
+
+                sumRows += minValue;
 
             }
-
-            sumRows += minValue;
 
         }
 
@@ -232,7 +236,7 @@ public class BranchBound {
     public int reduceColumns(int [][] inputGraph){
 
         int sumColumns = 0;
-        int minValue = Integer.MAX_VALUE;
+        int minValue;
 
         for(int i = 0; i < v; i++){
 
@@ -245,13 +249,17 @@ public class BranchBound {
 
             }
 
-            for(int k = 0; k < v; k++){
+            if(minValue != Integer.MAX_VALUE) {
 
-                inputGraph[k][i] -= minValue;
+                for (int k = 0; k < v; k++) {
+
+                    inputGraph[k][i] -= minValue;
+
+                }
+
+                sumColumns += minValue;
 
             }
-
-            sumColumns += minValue;
 
         }
 
