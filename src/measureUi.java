@@ -2,13 +2,16 @@ import java.util.Scanner;
 
 public class measureUi {
 
-    FullSearch fullSearch = new FullSearch();
-    Data data = new Data();
+    private FullSearch fullSearch = new FullSearch();
+    private BranchBound branchBound = new BranchBound();
+    private Data data = new Data();
 
     private boolean spr = true;
     private String fileName;
     private int vertex;
     private int[][] graph;
+    private long[] tab;
+    private int count;
 
     public void show(){
 
@@ -18,6 +21,7 @@ public class measureUi {
 
             System.out.println("Wybierz operacje:");
             System.out.println("1. Przeprowadz pomiary -> Algorytm BruteForce");
+            System.out.println("2. Przeprowadz pomiary -> Algorytm Branch&Bound");
             System.out.println("0. Wyjscie");
 
             int nr = scanner.nextInt();
@@ -31,10 +35,10 @@ public class measureUi {
 
                 case 1:
 
-                    long[] tab = new long[100];
+                    tab = new long[100];
                     System.out.println("Podaj liczbe wierzcholkow: ");
-                    int vertex = scanner.nextInt();
-                    int count = 0;
+                    vertex = scanner.nextInt();
+                    count = 0;
 
                     for(int i = 0; i < 200; i++){
 
@@ -58,6 +62,39 @@ public class measureUi {
                     }
 
                     data.saveResult(Integer.toString(vertex) + ".txt", tab);
+
+                    break;
+
+                case 2:
+                    tab = new long[100];
+                    System.out.println("Podaj liczbe wierzcholkow: ");
+                    vertex = scanner.nextInt();
+                    count = 0;
+
+                    for(int i = 0; i < 200; i++){
+
+                        data.generateRandomData(vertex);
+                        graph = data.getGraph();
+                        branchBound.setV(vertex);
+
+                        if(i > 99){
+
+                            long sTime = System.nanoTime();
+                            branchBound.algorithm(graph);
+                            long fTime = System.nanoTime();
+
+                            fTime -= sTime;
+                            tab[count] = fTime;
+
+                            count++;
+
+                        }
+
+                    }
+
+                    data.saveResult(Integer.toString(vertex) + ".txt", tab);
+
+                    break;
 
             }
 

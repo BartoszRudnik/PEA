@@ -7,8 +7,9 @@ public class testUi {
     private int vertex;
     private int[][] graph;
 
-    Data data = new Data();
-    FullSearch fullSearch = new FullSearch();
+    private Data data = new Data();
+    private FullSearch fullSearch = new FullSearch();
+    private BranchBound branchBound = new BranchBound();
 
     public void show() {
 
@@ -21,6 +22,7 @@ public class testUi {
             System.out.println("2. Wygeneruj losowe dane");
             System.out.println("3. Pokaz aktualne dane");
             System.out.println("4. Algorytm Brute Force");
+            System.out.println("5. Algorytm Branch&Bound");
             System.out.println("0. Wyjdz");
 
             int nrAlg = scanner.nextInt();
@@ -36,12 +38,17 @@ public class testUi {
                 case 1:
 
                     System.out.println("Podaje nazwe pliku do wczytania: ");
+
                     scanner.nextLine();
                     fileName = scanner.nextLine();
+
                     data.readData(fileName);
+
                     vertex = data.getV();
                     graph = data.getGraph();
+
                     fullSearch.setV(vertex);
+                    branchBound.setV(vertex);
 
                     break;
 
@@ -50,9 +57,12 @@ public class testUi {
                     System.out.println("Podaj liczbe wierzcholkow: ");
                     scanner.nextLine();
                     vertex = scanner.nextInt();
+
                     data.generateRandomData(vertex);
                     graph = data.getGraph();
+
                     fullSearch.setV(vertex);
+                    branchBound.setV(vertex);
 
                     break;
 
@@ -73,6 +83,13 @@ public class testUi {
                     else{
                         System.out.println("Graf jest niezgodny z zalozeniami");
                     }
+
+                    break;
+
+                case 5:
+
+                    System.out.println(branchBound.algorithm(graph));
+                    System.out.println(branchBound.getFinalPath());
 
                     break;
 

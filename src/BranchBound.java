@@ -1,6 +1,7 @@
 public class BranchBound {
 
     private boolean [] visited;
+    private StringBuilder finalPath;
     private int [][] graph;
     private int v;
     private int level = 0;
@@ -32,7 +33,11 @@ public class BranchBound {
         this.level = level;
     }
 
-    public int algorithm(){
+    public StringBuilder getFinalPath(){
+        return this.finalPath;
+    }
+
+    public int algorithm(int [][] graph){
 
         if(level == 0) {
 
@@ -55,9 +60,11 @@ public class BranchBound {
         visited = new boolean[v];
         visited[0] = true;
 
-        System.out.print("0 ");
+        finalPath = new StringBuilder();
+
+        finalPath.append("0 ");
         levelAlgorithm(levelGraph, tmp, level, startVertex);
-        System.out.println("0");
+        finalPath.append("0");
 
         return resultCost;
 
@@ -101,7 +108,8 @@ public class BranchBound {
             visited[index] = true;
             tmp = tmpResult;
 
-            System.out.print((index) + " ");
+            finalPath.append(index + " ");
+
 
             for (int j = 0; j < v; j++) {
                 levelGraph[startVertex][j] = -1;
@@ -245,7 +253,7 @@ public class BranchBound {
             for(int j = 0; j < v; j++){
 
                 if(inputGraph[j][i] < minValue && inputGraph[j][i] > -1)
-                    minValue = graph[j][i];
+                    minValue = inputGraph[j][i];
 
             }
 
