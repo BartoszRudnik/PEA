@@ -17,23 +17,7 @@ public class Main {
         bb.setGraph(adj);
         bb.setV(4);
 
-        System.out.println(bb.reduceRows());
-        System.out.println(bb.reduceColumns());
-
-        int [][] grap = bb.getGraph();
-
-        for(int i = 0; i < 4; i++){
-
-            for(int j = 0; j < 4; j++){
-
-                System.out.print(grap[i][j]);
-                System.out.print(" ");
-
-            }
-
-            System.out.println();
-
-        }
+        System.out.println(bb.algorithm());
 
     }
 
