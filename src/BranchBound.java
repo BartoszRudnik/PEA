@@ -67,8 +67,15 @@ public class BranchBound {
             }
         }
 
-        startVertex = 0;
+        for(int k = 0; k < v * v; k++) {
 
+            int gr[][] = new int[v][v];
+            graphList.add(gr);
+
+        }
+
+
+        startVertex = 0;
         visited[0] = true;
 
         finalPath.append("0-");
@@ -111,10 +118,13 @@ public class BranchBound {
                         index = i;
 
                     }
+
                     rArray[level - 1][i] = actualCost;
-                    int [][] saveGraph = copyGraph(newGraph);
-                    graphList.add(saveGraph);
-                    countGraph++;
+
+                    int [][] resultGraph;
+                    resultGraph = copyGraph(newGraph);
+
+                    graphList.set(level * i, resultGraph);
 
                 }
 
@@ -123,34 +133,7 @@ public class BranchBound {
             visited[index] = true;
             tmp = tmpResult;
 
-            for(int i = 0; i < v; i++){
-                if(rArray[level - 1][i] == tmp)
-                    rArray[level - 1][i] = -1;
-            }
-
-            for(int i = 0; i < level - 1; i++){
-
-                for(int j = 0; j < v; j++){
-
-                    if(rArray[i][j] < tmp && rArray[i][j] != -1){
-                        level = i;
-                        visited = new boolean[v];
-                        tmp = rArray[i][j];
-                        startVertex = j;
-                        finalPath.append(startVertex + "-");
-                        rArray[i][j] = -1;
-                        levelGraph = graphList.get(countGraph - 1);
-                        createPath(levelGraph,visited);
-                        levelAlgorithm(levelGraph, tmp, level, startVertex, rArray);
-                        return;
-                    }
-
-                }
-
-            }
-
             finalPath.append(index + "-");
-
 
             for (int j = 0; j < v; j++) {
                 levelGraph[startVertex][j] = -1;
