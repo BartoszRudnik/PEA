@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-
 public class FullSearch {
 
     private int v;
@@ -19,14 +15,14 @@ public class FullSearch {
         this.v = 0;
     }
 
-    public int algorithm(int graph[][]){
+    public int algorithm(int [][] graph){
 
         int s = 0;
         int count = 0;
         int shortestPath = Integer.MAX_VALUE;
         long numberOfPermutations = numberOfPermutations(v);
-        int data[] = new int[v - 1];
-        StringBuilder tmp = null;
+        int [] data = new int[v - 1];
+        StringBuilder tmp;
 
         for(int i = 0; i < v; i++){
 
@@ -47,13 +43,13 @@ public class FullSearch {
             tmp.append(k);
             tmp.append('-');
 
-            for(int j = 0; j < data.length; j++){
+            for (int datum : data) {
 
-                tmp.append(data[j]);
+                tmp.append(datum);
                 tmp.append('-');
 
-                actualPath += graph[k][data[j]];
-                k = data[j];
+                actualPath += graph[k][datum];
+                k = datum;
 
             }
             actualPath += graph[k][s];
@@ -84,7 +80,7 @@ public class FullSearch {
 
     }
 
-    public boolean checkGraph(int graph[][]){
+    public boolean checkGraph(int [][] graph){
 
         if(v <= 1)
             return false;
@@ -100,7 +96,7 @@ public class FullSearch {
 
     }
 
-    public int [] swap(int data[],int firstIndex, int secondIndex){
+    public int [] swap(int [] data, int firstIndex, int secondIndex){
 
         int tmp = data[firstIndex];
 
@@ -111,11 +107,9 @@ public class FullSearch {
 
     }
 
-    public int [] reverse(int data[], int first, int second){
+    public int [] reverse(int [] data, int first, int second){
 
         while(first < second){
-
-            int tmp = data[second];
 
             data = swap(data, first, second);
 
@@ -128,7 +122,7 @@ public class FullSearch {
 
     }
 
-    public int[] permutation(int data[]){
+    public int[] permutation(int [] data){
 
         if(data.length > 1){
 

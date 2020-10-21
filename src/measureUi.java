@@ -2,16 +2,11 @@ import java.util.Scanner;
 
 public class measureUi {
 
-    private FullSearch fullSearch = new FullSearch();
-    private BranchBound branchBound = new BranchBound();
-    private Data data = new Data();
+    private final FullSearch fullSearch = new FullSearch();
+    private final BranchBound branchBound = new BranchBound();
+    private final Data data = new Data();
 
     private boolean spr = true;
-    private String fileName;
-    private int vertex;
-    private int[][] graph;
-    private long[] tab;
-    private int count;
 
     public void show(){
 
@@ -26,6 +21,7 @@ public class measureUi {
 
             int nr = scanner.nextInt();
 
+            int[][] graph;
             switch(nr){
 
                 case 0:
@@ -35,10 +31,10 @@ public class measureUi {
 
                 case 1:
 
-                    tab = new long[100];
+                    long[] tab = new long[100];
                     System.out.println("Podaj liczbe wierzcholkow: ");
-                    vertex = scanner.nextInt();
-                    count = 0;
+                    int vertex = scanner.nextInt();
+                    int count = 0;
 
                     for(int i = 0; i < 200; i++){
 
@@ -61,7 +57,7 @@ public class measureUi {
 
                     }
 
-                    data.saveResult(Integer.toString(vertex) + ".txt", tab);
+                    data.saveResult(vertex + ".txt", tab);
 
                     break;
 
@@ -80,7 +76,7 @@ public class measureUi {
                         if(i > 99){
 
                             long sTime = System.nanoTime();
-                            branchBound.algorithm(graph);
+                            branchBound.Algorithm(graph);
                             long fTime = System.nanoTime();
 
                             fTime -= sTime;
@@ -92,7 +88,7 @@ public class measureUi {
 
                     }
 
-                    data.saveResult(Integer.toString(vertex) + ".txt", tab);
+                    data.saveResult(vertex + ".txt", tab);
 
                     break;
 

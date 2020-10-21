@@ -3,13 +3,11 @@ import java.util.Scanner;
 public class testUi {
 
     private boolean spr = true;
-    private String fileName;
-    private int vertex;
     private int[][] graph;
 
-    private Data data = new Data();
-    private FullSearch fullSearch = new FullSearch();
-    private BranchBound branchBound = new BranchBound();
+    private final Data data = new Data();
+    private final FullSearch fullSearch = new FullSearch();
+    private final BranchBound branchBound = new BranchBound();
 
     public void show() {
 
@@ -40,11 +38,11 @@ public class testUi {
                     System.out.println("Podaje nazwe pliku do wczytania: ");
 
                     scanner.nextLine();
-                    fileName = scanner.nextLine();
+                    String fileName = scanner.nextLine();
 
                     data.readData(fileName);
 
-                    vertex = data.getV();
+                    int vertex = data.getV();
                     graph = data.getGraph();
 
                     fullSearch.setV(vertex);
@@ -88,8 +86,8 @@ public class testUi {
 
                 case 5:
 
-                    System.out.println(branchBound.algorithm(graph));
-                    System.out.println(branchBound.getFinalPath());
+                    branchBound.Algorithm(graph);
+                    System.out.println(branchBound.getResult());
 
                     break;
 
