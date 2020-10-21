@@ -1,10 +1,15 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class BranchBound {
 
     private boolean [] visited;
-    private StringBuilder finalPath;
+    private StringBuilder finalPath = new StringBuilder();
+    private ArrayList<int[][]> graphList = new ArrayList<>();
     private int [][] graph;
     private int v;
     private int level = 0;
+    int countGraph;
     int startVertex = 0;
     int resultCost = 0;
     int actualCost = 0;
@@ -39,38 +44,42 @@ public class BranchBound {
 
     public int algorithm(int [][] graph){
 
-        if(level == 0) {
-
-            resultCost = Integer.MAX_VALUE;
-            actualCost = 0;
-
-            actualCost += reduceRows(graph);
-            actualCost += reduceColumns(graph);
-
-            level++;
-
-        }
-
+        finalPath = new StringBuilder();
         visited = new boolean[v];
+
+        resultCost = 0;
+        actualCost = 0;
+
+        actualCost += reduceRows(graph);
+        actualCost += reduceColumns(graph);
+
+        level++;
 
         int tmp = actualCost;
+        countGraph = 0;
+
         int[][] levelGraph = copyGraph(graph);
+        int[][] resultArray = new int[v][v];
+
+        for(int i = 0; i < v; i++){
+            for(int j = 0; j < v; j++){
+                resultArray[i][j] = -1;
+            }
+        }
 
         startVertex = 0;
-        visited = new boolean[v];
+
         visited[0] = true;
 
-        finalPath = new StringBuilder();
-
-        finalPath.append("0 ");
-        levelAlgorithm(levelGraph, tmp, level, startVertex);
+        finalPath.append("0-");
+        levelAlgorithm(levelGraph, tmp, level, startVertex, resultArray);
         finalPath.append("0");
 
         return resultCost;
 
     }
 
-    private void levelAlgorithm(int[][] levelGraph, int tmp, int level, int startVertex){
+    private void levelAlgorithm(int[][] levelGraph, int tmp, int level, int startVertex, int [][] rArray){
 
         if(level >= 1 && level < v){
 
@@ -97,9 +106,15 @@ public class BranchBound {
                     actualCost += levelGraph[startVertex][i];
 
                     if(actualCost < tmpResult){
+
                         tmpResult = actualCost;
                         index = i;
+
                     }
+                    rArray[level - 1][i] = actualCost;
+                    int [][] saveGraph = copyGraph(newGraph);
+                    graphList.add(saveGraph);
+                    countGraph++;
 
                 }
 
@@ -108,7 +123,33 @@ public class BranchBound {
             visited[index] = true;
             tmp = tmpResult;
 
-            finalPath.append(index + " ");
+            for(int i = 0; i < v; i++){
+                if(rArray[level - 1][i] == tmp)
+                    rArray[level - 1][i] = -1;
+            }
+
+            for(int i = 0; i < level - 1; i++){
+
+                for(int j = 0; j < v; j++){
+
+                    if(rArray[i][j] < tmp && rArray[i][j] != -1){
+                        level = i;
+                        visited = new boolean[v];
+                        tmp = rArray[i][j];
+                        startVertex = j;
+                        finalPath.append(startVertex + "-");
+                        rArray[i][j] = -1;
+                        levelGraph = graphList.get(countGraph - 1);
+                        createPath(levelGraph,visited);
+                        levelAlgorithm(levelGraph, tmp, level, startVertex, rArray);
+                        return;
+                    }
+
+                }
+
+            }
+
+            finalPath.append(index + "-");
 
 
             for (int j = 0; j < v; j++) {
@@ -123,7 +164,7 @@ public class BranchBound {
 
             level++;
             startVertex = index;
-            levelAlgorithm(levelGraph,tmp, level, startVertex);
+            levelAlgorithm(levelGraph,tmp, level, startVertex, rArray);
 
         }
         else{
@@ -147,6 +188,28 @@ public class BranchBound {
         }
 
         return newGraph;
+
+    }
+
+    private void createPath(int [][] graph, boolean [] visited){
+
+        visited[0] = true;
+
+        for(int i = 0; i < v; i++){
+
+            boolean test = true;
+
+            for(int j = 0; j < v; j++){
+
+                if(graph[j][i] > -1)
+                    test = false;
+
+            }
+
+            if(test)
+                visited[i] = true;
+
+        }
 
     }
 
