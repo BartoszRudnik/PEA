@@ -187,10 +187,7 @@ public class BranchBound {
 
         levelAlgorithm(graph, currBound, 0, level, currPath, finish);
 
-        if(System.currentTimeMillis() > finish)
-            return false;
-        else
-            return true;
+        return System.currentTimeMillis() <= finish;
 
     }
 
