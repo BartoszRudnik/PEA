@@ -7,7 +7,7 @@ public class Ui {
     testUi test = new testUi();
     measureUi measure = new measureUi();
 
-    public void showMenu() {
+    public void showMenu() throws InterruptedException {
 
         while (true) {
 

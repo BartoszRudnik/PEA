@@ -92,40 +92,59 @@ public class BranchBound {
 
     }
 
-    private void levelAlgorithm(int [][] graph, int curr_bound, int curr_weight, int level, int [] curr_path) {
+    private void levelAlgorithm(int [][] graph, int curr_bound, int curr_weight, int level, int [] curr_path, long finishTime) {
 
-        if(level >= 1 && level < v) {
+        if (System.currentTimeMillis() < finishTime) {
 
-            for (int i = 0; i < v; i++) {
+            if (level >= 1 && level < v) {
 
-                if (graph[curr_path[level - 1]][i] != 0 && !visited[i]) {
+                for (int i = 0; i < v; i++) {
 
-                    int temp = curr_bound;
-                    curr_weight += graph[curr_path[level - 1]][i];
+                    if (graph[curr_path[level - 1]][i] != 0 && !visited[i]) {
 
-                    if (level==1)
-                        curr_bound -= ((secondMin(graph, curr_path[level-1]) + secondMin(graph, i))/2);
-                    else
-                        curr_bound -= ((firstMin(graph, curr_path[level-1]) + secondMin(graph, i))/2);
+                        int temp = curr_bound;
+                        curr_weight += graph[curr_path[level - 1]][i];
 
-                    if (curr_bound + curr_weight < result) {
+                        if (level == 1)
+                            curr_bound -= ((secondMin(graph, curr_path[level - 1]) + secondMin(graph, i)) / 2);
+                        else
+                            curr_bound -= ((firstMin(graph, curr_path[level - 1]) + secondMin(graph, i)) / 2);
 
-                        curr_path[level] = i;
-                        visited[i] = true;
+                        if (curr_bound + curr_weight < result) {
 
-                        levelAlgorithm(graph, curr_bound, curr_weight, level + 1, curr_path);
+                            curr_path[level] = i;
+                            visited[i] = true;
+
+                            levelAlgorithm(graph, curr_bound, curr_weight, level + 1, curr_path, finishTime);
+
+                        }
+
+                        curr_weight -= graph[curr_path[level - 1]][i];
+                        curr_bound = temp;
+
+                        for (int j = 0; j < v; j++) {
+                            visited[j] = false;
+                        }
+
+                        for (int j = 0; j <= level - 1; j++)
+                            visited[curr_path[j]] = true;
 
                     }
 
-                    curr_weight -= graph[curr_path[level - 1]][i];
-                    curr_bound = temp;
+                }
 
-                    for(int j = 0; j< v; j++){
-                        visited[j] = false;
+            } else {
+
+                if (graph[curr_path[level - 1]][curr_path[0]] != 0) {
+
+                    int curr_res = curr_weight + graph[curr_path[level - 1]][curr_path[0]];
+
+                    if (curr_res < result) {
+
+                        finalPath = copyPath(curr_path);
+                        result = curr_res;
+
                     }
-
-                    for (int j = 0; j <= level - 1; j++)
-                        visited[curr_path[j]] = true;
 
                 }
 
@@ -133,25 +152,15 @@ public class BranchBound {
 
         }
         else{
-
-            if (graph[curr_path[level - 1]][curr_path[0]] != 0) {
-
-                int curr_res = curr_weight + graph[curr_path[level - 1]][curr_path[0]];
-
-                if (curr_res < result) {
-
-                    finalPath = copyPath(curr_path);
-                    result = curr_res;
-
-                }
-
-            }
-
+            return;
         }
 
     }
 
     public void Algorithm(int [][] graph) {
+
+        long start = System.currentTimeMillis();
+        long finish = start + 5 * 60 * 1000;
 
         int level = 1;
 
@@ -176,7 +185,10 @@ public class BranchBound {
         visited[0] = true;
         currPath[0] = 0;
 
-        levelAlgorithm(graph, currBound, 0, level, currPath);
+        levelAlgorithm(graph, currBound, 0, level, currPath, finish);
+
+        if(System.currentTimeMillis() > finish)
+            System.out.println("Przekroczono czas 5 minut");
 
     }
 

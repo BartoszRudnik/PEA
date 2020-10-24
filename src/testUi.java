@@ -1,15 +1,16 @@
 import java.util.Scanner;
+import java.util.Timer;
 
 public class testUi {
 
     private boolean spr = true;
     private int[][] graph;
-
+    private int vertex = 0;
     private final Data data = new Data();
     private final FullSearch fullSearch = new FullSearch();
     private final BranchBound branchBound = new BranchBound();
 
-    public void show() {
+    public void show() throws InterruptedException {
 
         Scanner scanner = new Scanner(System.in);
 
@@ -42,7 +43,7 @@ public class testUi {
 
                     data.readData(fileName);
 
-                    int vertex = data.getV();
+                    vertex = data.getV();
                     graph = data.getGraph();
 
                     fullSearch.setV(vertex);
@@ -89,7 +90,35 @@ public class testUi {
                     branchBound.Algorithm(graph);
                     System.out.println(branchBound.getResult());
 
+                    /*Thread thread = new Thread(() -> {
+                        try {
+
+                            boolean isDone = false;
+
+                            while (!Thread.interrupted() && !isDone) {
+
+                                branchBound.Algorithm(graph);
+                                System.out.println(branchBound.getResult());
+                                isDone = true;
+                                Thread.sleep(0);
+
+                            }
+
+                        } catch (InterruptedException e) {
+
+                            System.out.println("Przekroczono czas 5 minut");
+
+                        }
+                    });
+
+                    Timer timer = new Timer();
+                    timer.schedule(new TimeOutTask(thread, timer), 10 * 1000);
+
+                    thread.start();*/
+
                     break;
+
+
 
                 default:
 
