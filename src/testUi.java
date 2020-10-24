@@ -10,7 +10,7 @@ public class testUi {
     private final FullSearch fullSearch = new FullSearch();
     private final BranchBound branchBound = new BranchBound();
 
-    public void show() throws InterruptedException {
+    public void show() {
 
         Scanner scanner = new Scanner(System.in);
 
@@ -87,38 +87,19 @@ public class testUi {
 
                 case 5:
 
-                    branchBound.Algorithm(graph);
-                    System.out.println(branchBound.getResult());
+                   if(branchBound.Algorithm(graph)) {
 
-                    /*Thread thread = new Thread(() -> {
-                        try {
+                       System.out.println(branchBound.getResult());
 
-                            boolean isDone = false;
+                   }
+                   else{
 
-                            while (!Thread.interrupted() && !isDone) {
+                       System.out.println("Przekroczono czas 5 minut");
 
-                                branchBound.Algorithm(graph);
-                                System.out.println(branchBound.getResult());
-                                isDone = true;
-                                Thread.sleep(0);
+                   }
 
-                            }
-
-                        } catch (InterruptedException e) {
-
-                            System.out.println("Przekroczono czas 5 minut");
-
-                        }
-                    });
-
-                    Timer timer = new Timer();
-                    timer.schedule(new TimeOutTask(thread, timer), 10 * 1000);
-
-                    thread.start();*/
 
                     break;
-
-
 
                 default:
 

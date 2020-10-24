@@ -62,6 +62,7 @@ public class measureUi {
                     break;
 
                 case 2:
+                    int timeExceeded = 0;
                     tab = new long[100];
                     System.out.println("Podaj liczbe wierzcholkow: ");
                     vertex = scanner.nextInt();
@@ -76,16 +77,31 @@ public class measureUi {
                         if(i > 99){
 
                             long sTime = System.nanoTime();
-                            branchBound.Algorithm(graph);
+                            boolean test = branchBound.Algorithm(graph);
                             long fTime = System.nanoTime();
 
                             fTime -= sTime;
-                            tab[count] = fTime;
+
+                            if(test) {
+
+                                tab[count] = fTime;
+
+                            }
+                            else {
+
+                                tab[count] = - 1;
+                                timeExceeded++;
+
+                            }
 
                             count++;
 
                         }
 
+                    }
+
+                    if(timeExceeded > 0){
+                        System.out.println("Czas 5 minut przekroczony dla: " + timeExceeded + "% operacji");
                     }
 
                     data.saveResult(vertex + ".txt", tab);

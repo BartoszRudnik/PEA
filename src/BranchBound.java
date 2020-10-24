@@ -157,7 +157,7 @@ public class BranchBound {
 
     }
 
-    public void Algorithm(int [][] graph) {
+    public boolean Algorithm(int [][] graph) {
 
         long start = System.currentTimeMillis();
         long finish = start + 5 * 60 * 1000;
@@ -188,7 +188,9 @@ public class BranchBound {
         levelAlgorithm(graph, currBound, 0, level, currPath, finish);
 
         if(System.currentTimeMillis() > finish)
-            System.out.println("Przekroczono czas 5 minut");
+            return false;
+        else
+            return true;
 
     }
 
