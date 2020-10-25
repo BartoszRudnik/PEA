@@ -114,7 +114,7 @@ public class FullSearch {
     }
 
     //funkcja zamieniajaca miejscami element o indeksie 'firstIndex' z elementem o indeksie 'secondIndex' w tablicy 'data'
-    public int [] swap(int [] data, int firstIndex, int secondIndex){
+    private int [] swap(int [] data, int firstIndex, int secondIndex){
 
         int tmp = data[firstIndex];
 
@@ -126,7 +126,7 @@ public class FullSearch {
     }
 
     //funkcja odwracajaca kolejnosc wystepowania elementów w tablicy od elementu o indeksie 'start' do elementu o indeksie 'finish'
-    public int [] reverse(int [] data, int start, int finish){
+    private int [] reverse(int [] data, int start, int finish){
 
         while(start < finish){
 
@@ -142,7 +142,7 @@ public class FullSearch {
     }
 
     //funkcja wyznaczajaca nastepna permutacje dla danych w danej tablicy
-    public int[] permutation(int [] data){
+    private int[] permutation(int [] data){
 
         if(data.length > 1){
 
@@ -190,7 +190,7 @@ public class FullSearch {
     }
 
     //funkcja wyznaczajaca liczbe mozliwych permutacji dla grafu o 'n' wierzcholkach
-    public long numberOfPermutations(int n){
+    private long numberOfPermutations(int n){
 
         if(n < 1)
             return 0;

@@ -47,13 +47,13 @@ public class BranchBound {
 
     }
 
-    private int firstMin(int [][] graph, int index) {
+    private int getMinValue(int [][] graph, int index) {
 
         int minValue = Integer.MAX_VALUE;
 
         for (int i = 0; i < v; i++) {
 
-            if (graph[index][i] < minValue && index != i) {
+            if (graph[index][i] != -1 && graph[index][i] < minValue) {
 
                 minValue = graph[index][i];
 
@@ -65,25 +65,38 @@ public class BranchBound {
 
     }
 
-    private int secondMin(int [][] graph, int index) {
+    private int getSecondMinValue(int [][] graph, int index) {
 
+        int count = -1;
         int minValue = Integer.MAX_VALUE;
         int secondMinValue = Integer.MAX_VALUE;
 
         for (int j = 0; j < v; j++) {
 
-            if (index == j) {
-                continue;
-            }
+            if(graph[index][j] != -1) {
 
-            if (graph[index][j] <= minValue) {
+                if (graph[index][j] < minValue) {
 
-                secondMinValue = minValue;
-                minValue = graph[index][j];
+                    secondMinValue = minValue;
+                    minValue = graph[index][j];
+                    count = -1;
 
-            }
-            else if (graph[index][j] <= secondMinValue && graph[index][j] != minValue) {
-                secondMinValue = graph[index][j];
+                }else if(graph[index][j] == minValue){
+
+                    count++;
+
+                }
+                else if (graph[index][j] <= secondMinValue && graph[index][j] > minValue) {
+
+                    secondMinValue = graph[index][j];
+
+                }
+                else if(graph[index][j] <= secondMinValue && graph[index][j] == minValue && count > 0){
+
+                    secondMinValue = graph[index][j];
+
+                }
+
             }
 
         }
@@ -108,6 +121,47 @@ public class BranchBound {
 
     }
 
+    public boolean Algorithm(int [][] graph) {
+
+        long startTime = System.currentTimeMillis();
+        long finishTime = startTime + 5 * 60 * 1000;
+
+        int level = 1;
+
+        visited = new boolean[v];
+        finalPath = new int[v + 1];
+
+        int [] currPath = new int[v + 1];
+        int currBound = 0;
+        int currWeight = 0;
+
+        for(int i = 0; i < v + 1; i++){
+
+            currPath[i] = -1;
+
+        }
+
+        for (int i = 0; i < v; i++) {
+
+            currBound += (getMinValue(graph, i) + getSecondMinValue(graph, i));
+
+        }
+
+        if(currBound > 1) {
+
+            currBound /= 2;
+
+        }
+
+        visited[0] = true;
+        currPath[0] = 0;
+
+        levelAlgorithm(graph, currBound, currWeight, level, currPath, finishTime);
+
+        return System.currentTimeMillis() < finishTime;
+
+    }
+
     private void levelAlgorithm(int [][] graph, int curr_bound, int curr_weight, int level, int [] curr_path, long finishTime) {
 
         if (System.currentTimeMillis() < finishTime) {
@@ -116,15 +170,15 @@ public class BranchBound {
 
                 for (int i = 0; i < v; i++) {
 
-                    if (graph[curr_path[level - 1]][i] != 0 && !visited[i]) {
+                    if (graph[curr_path[level - 1]][i] != -1 && !visited[i]) {
 
-                        int temp = curr_bound;
+                        int tmp = curr_bound;
                         curr_weight += graph[curr_path[level - 1]][i];
 
                         if (level == 1)
-                            curr_bound -= ((secondMin(graph, curr_path[level - 1]) + secondMin(graph, i)) / 2);
+                            curr_bound -= ((getSecondMinValue(graph, curr_path[level - 1]) + getSecondMinValue(graph, i)) / 2);
                         else
-                            curr_bound -= ((firstMin(graph, curr_path[level - 1]) + secondMin(graph, i)) / 2);
+                            curr_bound -= ((getMinValue(graph, curr_path[level - 1]) + getSecondMinValue(graph, i)) / 2);
 
                         if (curr_bound + curr_weight < result) {
 
@@ -136,7 +190,7 @@ public class BranchBound {
                         }
 
                         curr_weight -= graph[curr_path[level - 1]][i];
-                        curr_bound = temp;
+                        curr_bound = tmp;
 
                         for (int j = 0; j < v; j++) {
                             visited[j] = false;
@@ -151,7 +205,7 @@ public class BranchBound {
 
             } else {
 
-                if (graph[curr_path[level - 1]][curr_path[0]] != 0) {
+                if (graph[curr_path[level - 1]][curr_path[0]] != -1) {
 
                     int curr_res = curr_weight + graph[curr_path[level - 1]][curr_path[0]];
 
@@ -173,52 +227,17 @@ public class BranchBound {
 
     }
 
-    public boolean Algorithm(int [][] graph) {
-
-        long start = System.currentTimeMillis();
-        long finish = start + 5 * 60 * 1000;
-
-        int level = 1;
-
-        visited = new boolean[v];
-        finalPath = new int[v + 1];
-
-        int [] currPath = new int[v + 1];
-        int currBound = 0;
-
-        for(int i = 0; i < v + 1; i++){
-
-            currPath[i] = -1;
-
-        }
-
-        for (int i = 0; i < v; i++) {
-
-            currBound += (firstMin(graph, i) + secondMin(graph, i));
-
-        }
-
-        if(currBound != 1){
-            currBound /= 2;
-        }
-
-        visited[0] = true;
-        currPath[0] = 0;
-
-        levelAlgorithm(graph, currBound, 0, level, currPath, finish);
-
-        return System.currentTimeMillis() < finish;
-
-    }
-
     public void printPath(){
 
         for(int i = 0; i < finalPath.length; i++){
 
             System.out.print(finalPath[i]);
 
-            if(i != finalPath.length - 1)
+            if(i != finalPath.length - 1) {
+
                 System.out.print(" - ");
+
+            }
 
         }
 
