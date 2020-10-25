@@ -87,16 +87,23 @@ public class testUi {
 
                 case 5:
 
-                   if(branchBound.Algorithm(graph)) {
+                    if(branchBound.checkGraph(graph)) {
 
-                       System.out.println(branchBound.getResult());
+                        if (branchBound.Algorithm(graph)) {
 
-                   }
-                   else{
+                            System.out.println(branchBound.getResult());
+                            branchBound.printPath();
 
-                       System.out.println("Przekroczono czas 5 minut");
+                        } else {
 
-                   }
+                            System.out.println("Przekroczono czas 5 minut");
+
+                        }
+
+                    }
+                    else{
+                        System.out.println("Graf jest niezgodny z zalozeniami");
+                    }
 
 
                     break;

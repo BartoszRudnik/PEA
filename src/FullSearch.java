@@ -11,58 +11,73 @@ public class FullSearch {
         return this.v;
     }
 
+    public void setPath(StringBuilder path){
+        this.path = path;
+    }
+
+    public StringBuilder getPath(){
+        return this.path;
+    }
+
     public FullSearch(){
         this.v = 0;
     }
 
     public int algorithm(int [][] graph){
 
-        int s = 0;
-        int count = 0;
         int shortestPath = Integer.MAX_VALUE;
+
+        //wyznaczenie liczby permutacji dla zadanej liczby wierzcholkow
         long numberOfPermutations = numberOfPermutations(v);
+
         int [] data = new int[v - 1];
         StringBuilder tmp;
 
-        for(int i = 0; i < v; i++){
+        //Wstawianie do tablicy wszystkich wierzcholkow z wyjatkiem wierzcholka startowego
+        for(int i = 1; i < v; i++){
 
-            if(i != s) {
-                data[count] = i;
-                count++;
-            }
+            data[i - 1] = i;
 
         }
 
         for(long i = 0; i < numberOfPermutations; i++){
 
+            // przechowuje koszt aktualnej permutacji
             int actualPath = 0;
-            int k = s;
+            int startPos = 0;
 
             tmp = new StringBuilder();
 
-            tmp.append(k);
+            tmp.append(startPos);
             tmp.append('-');
 
-            for (int datum : data) {
+            //obliczanie kosztu aktualnej permutacji
+            for (int j : data) {
 
-                tmp.append(datum);
+                tmp.append(j);
                 tmp.append('-');
 
-                actualPath += graph[k][datum];
-                k = datum;
+                actualPath += graph[startPos][j];
+                startPos = j;
 
             }
-            actualPath += graph[k][s];
+            actualPath += graph[startPos][0];
 
-            tmp.append(s);
+            tmp.append(0);
 
+            //wyznaczenie kolejnej permutacji
             if(i < numberOfPermutations - 1) {
+
                 data = permutation(data);
+
             }
 
+            // aktualizacji kosztu minimalnego przejscia
             if(actualPath < shortestPath) {
+
                 shortestPath = actualPath;
                 path = tmp;
+
             }
 
         }
@@ -71,6 +86,7 @@ public class FullSearch {
 
     }
 
+    //funkcja sluzaca do wypisania sciezki o najmniejszym koszcie
     public void getResultPath(){
 
         if(path != null)
@@ -80,6 +96,7 @@ public class FullSearch {
 
     }
 
+    //funkcja sprawdzajaca czy zadany graf ma na przekatnej '-1'
     public boolean checkGraph(int [][] graph){
 
         if(v <= 1)
@@ -96,6 +113,7 @@ public class FullSearch {
 
     }
 
+    //funkcja zamieniajaca miejscami element o indeksie 'firstIndex' z elementem o indeksie 'secondIndex' w tablicy 'data'
     public int [] swap(int [] data, int firstIndex, int secondIndex){
 
         int tmp = data[firstIndex];
@@ -107,14 +125,15 @@ public class FullSearch {
 
     }
 
-    public int [] reverse(int [] data, int first, int second){
+    //funkcja odwracajaca kolejnosc wystepowania elementów w tablicy od elementu o indeksie 'start' do elementu o indeksie 'finish'
+    public int [] reverse(int [] data, int start, int finish){
 
-        while(first < second){
+        while(start < finish){
 
-            data = swap(data, first, second);
+            data = swap(data, start, finish);
 
-            first++;
-            second--;
+            start++;
+            finish--;
 
         }
 
@@ -122,6 +141,7 @@ public class FullSearch {
 
     }
 
+    //funkcja wyznaczajaca nastepna permutacje dla danych w danej tablicy
     public int[] permutation(int [] data){
 
         if(data.length > 1){
@@ -129,22 +149,39 @@ public class FullSearch {
             int lastIndex = data.length - 2;
             int next = data.length - 1;
 
+            //wyznaczamy indeks elementu wzgledem, ktorego stworzona zostanie nastepna permutacja, przyjmijmy nazwe 'pivot'
             while (lastIndex >= 0) {
+
                 if (data[lastIndex] < data[lastIndex + 1]) {
                     break;
                 }
+
                 lastIndex--;
+
             }
 
-            for(int i = data.length - 1; i > lastIndex; i--){
-                if(data[i] > data[lastIndex]){
-                    next = i;
-                    break;
+            //jesli 'lastIndex' ma wartosc -1 to w tablicy nie wystepuje para rosnacych elementów i nie mozna wyznaczyc nastepnej permutacji
+            if(lastIndex >= 0) {
+
+                //wyznaczamy indeks ostatniego rosnacego elementu
+                for (int i = data.length - 1; i > lastIndex; i--) {
+
+                    if (data[i] > data[lastIndex]) {
+
+                        next = i;
+                        break;
+
+                    }
+
                 }
-            }
 
-            data = swap(data, next, lastIndex);
-            data = reverse(data, lastIndex  + 1, data.length - 1);
+                //zamiana miejsc pivota i ostatniego rosnacego elementu
+                data = swap(data, next, lastIndex);
+
+                //odwrócenie kolejnosci elementów znajdujących się w tablicy pomiędzy pivotem a ostatnim rosnacym elementem
+                data = reverse(data, lastIndex + 1, data.length - 1);
+
+            }
 
         }
 
@@ -152,6 +189,7 @@ public class FullSearch {
 
     }
 
+    //funkcja wyznaczajaca liczbe mozliwych permutacji dla grafu o 'n' wierzcholkach
     public long numberOfPermutations(int n){
 
         if(n < 1)
@@ -159,8 +197,11 @@ public class FullSearch {
 
         long result = 1;
 
-        for(int i = 2; i <= n - 1; i++)
+        for(int i = 2; i <= n - 1; i++) {
+
             result *= i;
+
+        }
 
         return result;
 

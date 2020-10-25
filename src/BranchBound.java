@@ -92,6 +92,22 @@ public class BranchBound {
 
     }
 
+    public boolean checkGraph(int [][] graph){
+
+        if(v <= 1)
+            return false;
+
+        for(int i = 0; i < v; i++){
+
+            if(graph[i][i] != -1)
+                return false;
+
+        }
+
+        return true;
+
+    }
+
     private void levelAlgorithm(int [][] graph, int curr_bound, int curr_weight, int level, int [] curr_path, long finishTime) {
 
         if (System.currentTimeMillis() < finishTime) {
@@ -171,12 +187,16 @@ public class BranchBound {
         int currBound = 0;
 
         for(int i = 0; i < v + 1; i++){
+
             currPath[i] = -1;
+
         }
 
-        for (int i = 0; i < v; i++)
-            currBound += (firstMin(graph, i) +
-                    secondMin(graph, i));
+        for (int i = 0; i < v; i++) {
+
+            currBound += (firstMin(graph, i) + secondMin(graph, i));
+
+        }
 
         if(currBound != 1){
             currBound /= 2;
@@ -187,7 +207,22 @@ public class BranchBound {
 
         levelAlgorithm(graph, currBound, 0, level, currPath, finish);
 
-        return System.currentTimeMillis() <= finish;
+        return System.currentTimeMillis() < finish;
+
+    }
+
+    public void printPath(){
+
+        for(int i = 0; i < finalPath.length; i++){
+
+            System.out.print(finalPath[i]);
+
+            if(i != finalPath.length - 1)
+                System.out.print(" - ");
+
+        }
+
+        System.out.println();
 
     }
 
