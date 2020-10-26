@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.Timer;
 
 public class testUi {
 
@@ -7,8 +6,8 @@ public class testUi {
     private int[][] graph;
     private int vertex = 0;
     private final Data data = new Data();
-    private final FullSearch fullSearch = new FullSearch();
-    private final BranchBound branchBound = new BranchBound();
+    private FullSearch fullSearch = new FullSearch();
+    private BranchBound branchBound = new BranchBound();
 
     public void show() {
 
@@ -43,25 +42,16 @@ public class testUi {
 
                     data.readData(fileName);
 
-                    vertex = data.getV();
-                    graph = data.getGraph();
-
-                    fullSearch.setV(vertex);
-                    branchBound.setV(vertex);
-
                     break;
 
                 case 2:
 
                     System.out.println("Podaj liczbe wierzcholkow: ");
+
                     scanner.nextLine();
                     vertex = scanner.nextInt();
 
                     data.generateRandomData(vertex);
-                    graph = data.getGraph();
-
-                    fullSearch.setV(vertex);
-                    branchBound.setV(vertex);
 
                     break;
 
@@ -72,6 +62,12 @@ public class testUi {
                     break;
 
                 case 4:
+
+                    fullSearch = new FullSearch();
+
+                    vertex = data.getV();
+                    graph = data.getGraph();
+                    fullSearch.setV(vertex);
 
                     if(fullSearch.checkGraph(graph)){
 
@@ -86,6 +82,12 @@ public class testUi {
                     break;
 
                 case 5:
+
+                    branchBound = new BranchBound();
+
+                    vertex = data.getV();
+                    graph = data.getGraph();
+                    branchBound.setV(vertex);
 
                     if(branchBound.checkGraph(graph)) {
 
