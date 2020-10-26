@@ -33,6 +33,7 @@ public class BranchBound {
         this.result = result;
     }
 
+    //funkcja tworzaca nowa tablice i kopiujaca do niej zawartosc 'oldPath'
     private int [] copyPath(int [] oldPath) {
 
         int [] newPath = new int[v + 1];
@@ -47,6 +48,7 @@ public class BranchBound {
 
     }
 
+    //funkcja sprawdzajaca czy zadany graf ma na przekatnej '-1'
     public boolean checkGraph(int [][] graph){
 
         if(v <= 1)
@@ -63,6 +65,7 @@ public class BranchBound {
 
     }
 
+    //funkcja zwracajaca minimalny koszt drogi z wierzcholka o indeksie 'row'
     private int getMinOfRow(int [][] graph, int row) {
 
         int minValue = Integer.MAX_VALUE;
@@ -81,6 +84,7 @@ public class BranchBound {
 
     }
 
+    //funkcja zwracajaca drugi najmniejszy koszt drogi z wierzchołka o indeksie 'row'
     public int getSecondMinOfRow(int [][] graph, int row) {
 
         int count = -1;
@@ -123,12 +127,22 @@ public class BranchBound {
 
     public boolean Algorithm(int [][] graph) {
 
+        //zmienna wyznaczajaca aktualny czas
         long startTime = System.currentTimeMillis();
+
+        //ustalamy maksymalny czas działania algorytmu na 5 minut
         long finishTime = startTime + 5 * 60 * 1000;
 
+        //inicjalizacja zmiennej oznaczajacej poziom, na ktorym aktualnie jestesmy
         int level = 1;
+
+        //tablica przechowujace aktualne rozwiazanie
         int [] currPath = new int[v + 1];
+
+        //zmienna przechowujaca aktualne ograniczenie
         int lowerBound = 0;
+
+        //zmienna przechowujaca koszt aktualnego rozwiazania
         int actualCost = 0;
 
         visited = new boolean[v];
@@ -140,45 +154,63 @@ public class BranchBound {
 
         }
 
+        //obliczamy wstepne ograniczenie korzystajac z formuly 1/2 * suma najmniejszego i drugiego najmniejszego
+        //kosztu każdego z wierzchołków
         for (int i = 0; i < v; i++) {
 
             lowerBound += (getMinOfRow(graph, i) + getSecondMinOfRow(graph, i));
 
         }
+        lowerBound /= 2;
 
-        if(lowerBound > 1) {
-
-            lowerBound /= 2;
-
-        }
-
+        //jako wierzchołek startowy przyjmujemy wierzcholek o indeksie '0'
         visited[0] = true;
         currPath[0] = 0;
 
+        //wywolywana jest funkcja dokonujaca obliczen na kolejnych poziomach
         levelAlgorithm(graph, lowerBound, actualCost, level, currPath, finishTime);
 
+        //zwracana jest informacje czy algorytm wykonal sie w czasie do 5 minut
         return System.currentTimeMillis() < finishTime;
 
     }
 
     private void levelAlgorithm(int [][] graph, int lowerBound, int actualCost, int level, int [] currPath, long finishTime) {
 
+        //sprawdzamy czy funkcja nie przekroczyła ustalonego limitu czasu wykonywania
         if (System.currentTimeMillis() < finishTime) {
 
+            //przypadek, w którym poziom nalezy do przedziału [1,v)
             if (level < v) {
 
                 for (int i = 0; i < v; i++) {
 
+                    //sprawdzamy czy badany wierzcholek istnieje oraz czy nie byl juz wczesniej odwiedzony
                     if (graph[currPath[level - 1]][i] != -1 && !visited[i]) {
 
-                        int tmpCost = lowerBound;
+                        int tmpLowerBound = lowerBound;
                         actualCost += graph[currPath[level - 1]][i];
 
-                        if (level > 1)
-                            lowerBound -= ((getMinOfRow(graph, currPath[level - 1]) + getSecondMinOfRow(graph, i)) / 2);
-                        else
-                            lowerBound -= ((getSecondMinOfRow(graph, currPath[level - 1]) + getSecondMinOfRow(graph, i)) / 2);
+                        //aktualizujemy wartosc ograniczenia
+                        if (level > 1) {
 
+                            int tmpBound = getMinOfRow(graph,currPath[level - 1]) + getSecondMinOfRow(graph,i);
+                            tmpBound /= 2;
+
+                            lowerBound -= tmpBound;
+
+                        }
+                        else {
+
+                            int tmpBound = getSecondMinOfRow(graph, currPath[level -1]) + getSecondMinOfRow(graph,i);
+                            tmpBound /= 2;
+
+                            lowerBound -= tmpBound;
+
+                        }
+
+                        //jesli aktualne ograniczenie jest mniejsze od aktualnego wyniku to
+                        // kontynuujemy przeszukiwanie na nastepnym poziomie
                         if (lowerBound + actualCost < result) {
 
                             currPath[level] = i;
@@ -188,32 +220,35 @@ public class BranchBound {
 
                         }
 
-                        actualCost -= graph[currPath[level - 1]][i];
-                        lowerBound = tmpCost;
-
+                        //jesli aktualne ograniczenie jest wieksze od aktualnego wyniku to anulujemy wszystkie zmiany,
+                        //ktore powstaly w tej iteracji
                         for (int j = 1; j < v; j++) {
                             visited[j] = false;
                         }
 
-                        for (int j = 0; j < level; j++)
+                        for (int j = 0; j < level; j++) {
                             visited[currPath[j]] = true;
+                        }
+
+                        lowerBound = tmpLowerBound;
+                        actualCost -= graph[currPath[level - 1]][i];
 
                     }
 
                 }
 
-            } else {
+            }
+            //przypadek, w ktorym osiagnelismy ostatni poziom
+            else {
 
-                if (graph[currPath[level - 1]][0] != -1) {
+                //dodajemy do aktualnego rozwiazania koszt drogi z ostatniego wierzcholka do wierzcholka startowego
+                actualCost += graph[currPath[level - 1]][0];
 
-                    int currRes = actualCost + graph[currPath[level - 1]][0];
+                //jeśli aktualne rozwiazanie ma mniejszy łaczy kost to aktualizujemy rozwiazanie koncowe
+                if (actualCost < result) {
 
-                    if (currRes < result) {
-
-                        finalPath = copyPath(currPath);
-                        result = currRes;
-
-                    }
+                   finalPath = copyPath(currPath);
+                   result = actualCost;
 
                 }
 
@@ -226,6 +261,7 @@ public class BranchBound {
 
     }
 
+    //funkcja wypisujaca wynikowa droge
     public void printPath(){
 
         for(int i = 0; i < finalPath.length; i++){
