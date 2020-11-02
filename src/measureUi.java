@@ -38,7 +38,7 @@ public class measureUi {
 
                     for(int i = 0; i < 200; i++){
 
-                        data.generateRandomData(vertex);
+                        data.generateRandomDataAsymetric(vertex);
                         graph = data.getGraph();
                         fullSearch.setV(vertex);
 
@@ -70,7 +70,7 @@ public class measureUi {
 
                     for(int i = 0; i < 200; i++){
 
-                        data.generateRandomData(vertex);
+                        data.generateRandomDataAsymetric(vertex);
                         graph = data.getGraph();
                         branchBound.setV(vertex);
 

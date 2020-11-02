@@ -58,7 +58,7 @@ public class Data {
 
     }
 
-    public void generateRandomData(int vertex){
+    public void generateRandomDataAsymetric(int vertex){
 
         v = vertex;
 
@@ -74,6 +74,35 @@ public class Data {
                     graph[i][j] = -1;
                 else
                     graph[i][j] = rand.nextInt(100);
+
+            }
+
+        }
+
+    }
+
+    public void generateRandomDataSymetric(int vertex){
+
+        v = vertex;
+        graph = new int[vertex][vertex];
+        boolean [][] paths = new boolean[vertex][vertex];
+
+        Random rand = new Random();
+
+        for(int i = 0; i < vertex; i++){
+
+            for(int j = 0; j < vertex; j++){
+
+                if( i == j)
+                    graph[i][j] = -1;
+                else if(paths[i][j] == false){
+
+                    int tmp = rand.nextInt(100);
+
+                    graph[i][j] = graph[j][i] = tmp;
+                    paths[i][j] = paths[j][i] = true;
+
+                }
 
             }
 

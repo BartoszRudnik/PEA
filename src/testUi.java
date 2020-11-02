@@ -17,10 +17,11 @@ public class testUi {
 
             System.out.println("Wybierz operacje");
             System.out.println("1. Wczytaj dane z pliku");
-            System.out.println("2. Wygeneruj losowe dane");
-            System.out.println("3. Pokaz aktualne dane");
-            System.out.println("4. Algorytm Brute Force");
-            System.out.println("5. Algorytm Branch&Bound");
+            System.out.println("2. Wygeneruj losowe dane asymetryczne");
+            System.out.println("3. Wygeneruj losowe dane symetryczne");
+            System.out.println("4. Pokaz aktualne dane");
+            System.out.println("5. Algorytm Brute Force");
+            System.out.println("6. Algorytm Branch&Bound");
             System.out.println("0. Wyjdz");
 
             int nrAlg = scanner.nextInt();
@@ -51,17 +52,28 @@ public class testUi {
                     scanner.nextLine();
                     vertex = scanner.nextInt();
 
-                    data.generateRandomData(vertex);
+                    data.generateRandomDataAsymetric(vertex);
 
                     break;
 
                 case 3:
 
-                    data.printData();
+                    System.out.println("Podaj liczbe wierzcholkow: ");
+
+                    scanner.nextLine();
+                    vertex = scanner.nextInt();
+
+                    data.generateRandomDataSymetric(vertex);
 
                     break;
 
                 case 4:
+
+                    data.printData();
+
+                    break;
+
+                case 5:
 
                     fullSearch = new FullSearch();
 
@@ -81,7 +93,7 @@ public class testUi {
 
                     break;
 
-                case 5:
+                case 6:
 
                     branchBound = new BranchBound();
 
