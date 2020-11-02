@@ -58,6 +58,22 @@ public class Data {
 
     }
 
+    public boolean checkGraph(int [][] graph){
+
+        if(v <= 1)
+            return false;
+
+        for(int i = 0; i < v; i++){
+
+            if(graph[i][i] != -1)
+                return false;
+
+        }
+
+        return true;
+
+    }
+
     public void generateRandomDataAsymetric(int vertex){
 
         v = vertex;

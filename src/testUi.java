@@ -8,6 +8,7 @@ public class testUi {
     private final Data data = new Data();
     private FullSearch fullSearch = new FullSearch();
     private BranchBound branchBound = new BranchBound();
+    private DP dP = new DP();
 
     public void show() {
 
@@ -22,6 +23,7 @@ public class testUi {
             System.out.println("4. Pokaz aktualne dane");
             System.out.println("5. Algorytm Brute Force");
             System.out.println("6. Algorytm Branch&Bound");
+            System.out.println("7. Algorytm programowania dynamicznego");
             System.out.println("0. Wyjdz");
 
             int nrAlg = scanner.nextInt();
@@ -81,7 +83,7 @@ public class testUi {
                     graph = data.getGraph();
                     fullSearch.setV(vertex);
 
-                    if(fullSearch.checkGraph(graph)){
+                    if(data.checkGraph(graph)){
 
                         System.out.println(fullSearch.algorithm(graph));
                         fullSearch.getResultPath();
@@ -101,7 +103,7 @@ public class testUi {
                     graph = data.getGraph();
                     branchBound.setV(vertex);
 
-                    if(branchBound.checkGraph(graph)) {
+                    if(data.checkGraph(graph)) {
 
                         if (branchBound.Algorithm(graph)) {
 
@@ -119,6 +121,24 @@ public class testUi {
                         System.out.println("Graf jest niezgodny z zalozeniami");
                     }
 
+
+                    break;
+
+                case 7:
+
+                    dP = new DP();
+
+                    vertex = data.getV();
+                    graph = data.getGraph();
+                    dP.setV(vertex);
+                    dP.setGraph(graph);
+
+                    if(data.checkGraph(graph)) {
+
+                        dP.algorithm();
+                        System.out.println(dP.getResult());
+
+                    }
 
                     break;
 

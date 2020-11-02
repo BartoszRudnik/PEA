@@ -96,23 +96,6 @@ public class FullSearch {
 
     }
 
-    //funkcja sprawdzajaca czy zadany graf ma na przekatnej '-1'
-    public boolean checkGraph(int [][] graph){
-
-        if(v <= 1)
-            return false;
-
-        for(int i = 0; i < v; i++){
-
-            if(graph[i][i] != -1)
-                return false;
-
-        }
-
-        return true;
-
-    }
-
     //funkcja zamieniajaca miejscami element o indeksie 'firstIndex' z elementem o indeksie 'secondIndex' w tablicy 'data'
     private int [] swap(int [] data, int firstIndex, int secondIndex){
 

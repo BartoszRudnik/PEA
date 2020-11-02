@@ -48,23 +48,6 @@ public class BranchBound {
 
     }
 
-    //funkcja sprawdzajaca czy zadany graf ma na przekatnej '-1'
-    public boolean checkGraph(int [][] graph){
-
-        if(v <= 1)
-            return false;
-
-        for(int i = 0; i < v; i++){
-
-            if(graph[i][i] != -1)
-                return false;
-
-        }
-
-        return true;
-
-    }
-
     //funkcja zwracajaca minimalny koszt drogi z wierzcholka o indeksie 'row'
     private int getMinOfRow(int [][] graph, int row) {
 
