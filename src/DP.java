@@ -5,7 +5,6 @@ public class DP {
     private int v;
     private int result;
     private int maxCount;
-    private StringBuilder [] resultPaths;
 
     public int[][] getGraph(){
         return this.graph;
@@ -53,12 +52,6 @@ public class DP {
         initializeGraph();
         tmpGraph[0][1] = 0;
 
-        resultPaths = new StringBuilder[v];
-
-        for(int i = 0; i < v; i++){
-            resultPaths[i] = new StringBuilder();
-        }
-
         for (int i = 1; i < maxCount; i++) {
 
             for (int j = 0; j < v; j++) {
@@ -78,7 +71,6 @@ public class DP {
 
                             if(min1 < tmpGraph[k][logicalSum]){
 
-                                resultPaths[j].append(min1 + "*" + i + "* ");
                                 tmpGraph[k][logicalSum] = min1;
 
                             }
@@ -112,16 +104,6 @@ public class DP {
         }
 
         return result;
-
-    }
-
-    public void getResultPath(){
-
-        for(int i = 0; i < v; i++){
-
-            System.out.println(resultPaths[i]);
-
-        }
 
     }
 
