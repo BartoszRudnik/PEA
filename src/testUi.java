@@ -137,6 +137,7 @@ public class testUi {
 
                         dP.algorithm();
                         System.out.println(dP.getResult());
+                        //dP.getResultPath();
 
                     }
 

@@ -4,6 +4,7 @@ public class measureUi {
 
     private final FullSearch fullSearch = new FullSearch();
     private final BranchBound branchBound = new BranchBound();
+    private final DP dP = new DP();
     private final Data data = new Data();
 
     private boolean spr = true;
@@ -17,6 +18,7 @@ public class measureUi {
             System.out.println("Wybierz operacje:");
             System.out.println("1. Przeprowadz pomiary -> Algorytm BruteForce");
             System.out.println("2. Przeprowadz pomiary -> Algorytm Branch&Bound");
+            System.out.println("3. Przprowadz pomiary -> DP");
             System.out.println("0. Wyjscie");
 
             int nr = scanner.nextInt();
@@ -57,7 +59,7 @@ public class measureUi {
 
                     }
 
-                    data.saveResult(vertex + ".txt", tab);
+                    data.saveResult(vertex + "_FS.txt", tab);
 
                     break;
 
@@ -104,7 +106,40 @@ public class measureUi {
                         System.out.println("Czas 5 minut przekroczony dla: " + timeExceeded + "% operacji");
                     }
 
-                    data.saveResult(vertex + ".txt", tab);
+                    data.saveResult(vertex + "_BB.txt", tab);
+
+                    break;
+
+                case 3:
+
+                    tab = new long[100];
+                    System.out.println("Podaj liczbe wierzcholkow: ");
+                    vertex = scanner.nextInt();
+                    count = 0;
+
+                    for(int i = 0; i < 200; i++){
+
+                        data.generateRandomDataAsymetric(vertex);
+                        graph = data.getGraph();
+                        dP.setV(vertex);
+                        dP.setGraph(graph);
+
+                        if(i > 99){
+
+                            long sTime = System.nanoTime();
+                            dP.algorithm();
+                            long fTime = System.nanoTime();
+
+                            fTime -= sTime;
+                            tab[count] = fTime;
+
+                            count++;
+
+                        }
+
+                    }
+
+                    data.saveResult(vertex + "_DP.txt", tab);
 
                     break;
 
