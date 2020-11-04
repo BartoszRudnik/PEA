@@ -48,7 +48,7 @@ public class DP {
 
     public void algorithm(){
 
-        setMaxCount((int) Math.pow(2, v));
+        setMaxCount(1 << v);
         initializeGraph();
         tmpGraph[0][1] = 0;
 
@@ -56,13 +56,13 @@ public class DP {
 
             for (int j = 0; j < v; j++) {
 
-                int tmp1 = (int) Math.pow(2, j);
+                int tmp1 = 1 << j;
 
                 if ((i & tmp1) != 0) {
 
                     for (int k = 0; k < v; k++) {
 
-                        int tmp2 = (int) Math.pow(2, k);
+                        int tmp2 = 1 << k;
 
                         if ((i & tmp2) == 0) {
 

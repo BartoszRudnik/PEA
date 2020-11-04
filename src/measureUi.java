@@ -44,7 +44,9 @@ public class measureUi {
                         graph = data.getGraph();
                         fullSearch.setV(vertex);
 
-                        if(i > 99){
+                        if(i <= 99)
+                            fullSearch.algorithm(graph);
+                        else{
 
                             long sTime = System.nanoTime();
                             fullSearch.algorithm(graph);
@@ -56,6 +58,8 @@ public class measureUi {
                             count++;
 
                         }
+
+                        System.out.println(i);
 
                     }
 
@@ -76,7 +80,9 @@ public class measureUi {
                         graph = data.getGraph();
                         branchBound.setV(vertex);
 
-                        if(i > 99){
+                        if(i <= 99)
+                            branchBound.Algorithm(graph);
+                        else{
 
                             long sTime = System.nanoTime();
                             boolean test = branchBound.Algorithm(graph);
@@ -100,6 +106,8 @@ public class measureUi {
 
                         }
 
+                        System.out.println(i);
+
                     }
 
                     if(timeExceeded > 0){
@@ -117,14 +125,16 @@ public class measureUi {
                     vertex = scanner.nextInt();
                     count = 0;
 
-                    for(int i = 0; i < 200; i++){
+                    for(int i = 0; i < 125; i++){
 
                         data.generateRandomDataAsymetric(vertex);
                         graph = data.getGraph();
                         dP.setV(vertex);
                         dP.setGraph(graph);
 
-                        if(i > 99){
+                        if(i <= 99)
+                            dP.algorithm();
+                        else{
 
                             long sTime = System.nanoTime();
                             dP.algorithm();
@@ -136,6 +146,8 @@ public class measureUi {
                             count++;
 
                         }
+
+                        System.out.println(i);
 
                     }
 
