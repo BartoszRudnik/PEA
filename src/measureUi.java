@@ -4,7 +4,7 @@ public class measureUi {
 
     private final FullSearch fullSearch = new FullSearch();
     private final BranchBound branchBound = new BranchBound();
-    private final DP dP = new DP();
+    private final DP dynamic = new DP();
     private final Data data = new Data();
 
     private boolean spr = true;
@@ -125,19 +125,21 @@ public class measureUi {
                     vertex = scanner.nextInt();
                     count = 0;
 
-                    for(int i = 0; i < 125; i++){
+                    for(int i = 0; i < 200; i++){
 
                         data.generateRandomDataAsymetric(vertex);
                         graph = data.getGraph();
-                        dP.setV(vertex);
-                        dP.setGraph(graph);
+
+                        dynamic.setV(vertex);
+                        dynamic.setGraph(graph);
+                        dynamic.initializeGraph();
 
                         if(i <= 99)
-                            dP.algorithm();
+                            dynamic.algorithm(0, (1 << vertex) - 2);
                         else{
 
                             long sTime = System.nanoTime();
-                            dP.algorithm();
+                            dynamic.algorithm(0 , (1 << vertex) - 2);
                             long fTime = System.nanoTime();
 
                             fTime -= sTime;

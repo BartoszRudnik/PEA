@@ -2,82 +2,61 @@ public class DP {
 
     private int [][] graph;
     private int [][] tmpGraph;
+    private int [][] vertexGraph;
     private int v;
+    private int graphLen;
     private int result;
-    private int maxCount;
-
-    public int[][] getGraph(){
-        return this.graph;
-    }
+    private StringBuilder resultPath = new StringBuilder();
 
     public void setGraph(int [][] graph){
         this.graph = graph;
     }
 
-    public int getV(){
-        return this.v;
+    public int [][] getGraph(){
+        return this.graph;
     }
 
     public void setV(int v){
         this.v = v;
     }
 
-    public void setResult(int result){
-        this.result = result;
+    public int getV(){
+        return this.v;
     }
 
-    public void setMaxCount(int maxCount){
-        this.maxCount = maxCount;
+    public void setGraphLen(){
+        graphLen = (1 << v);
     }
 
-    private void initializeGraph(){
-
-        tmpGraph = new int[v][maxCount];
-
-        for (int i = 0; i < v; i++){
-
-            for(int j = 0; j < maxCount; j++){
-
-                tmpGraph[i][j] = Short.MAX_VALUE;
-
-            }
-
-        }
-
+    public int getGraphLen(){
+        return this.graphLen;
     }
 
-    public void algorithm(){
+    public void initializeGraph(){
 
-        setMaxCount(1 << v);
-        initializeGraph();
-        tmpGraph[0][1] = 0;
+        setGraphLen();
 
-        for (int i = 1; i < maxCount; i++) {
+        resultPath = new StringBuilder();
+        resultPath.append("0-");
 
-            for (int j = 0; j < v; j++) {
+        tmpGraph = new int[v][graphLen];
+        vertexGraph = new int[v][graphLen];
 
-                int tmp1 = 1 << j;
+        for(int i = 0; i < v; i++){
 
-                if ((i & tmp1) != 0) {
+            for(int j = 0; j < graphLen; j++){
 
-                    for (int k = 0; k < v; k++) {
+                if(i == j) {
 
-                        int tmp2 = 1 << k;
+                    vertexGraph[i][j] = -1;
+                    tmpGraph[i][j] = -1;
 
-                        if ((i & tmp2) == 0) {
+                }
 
-                            int logicalSum = i | tmp2;
-                            int min1 = tmpGraph[j][i] + graph[j][k];
+                else {
 
-                            if(min1 < tmpGraph[k][logicalSum]){
-
-                                tmpGraph[k][logicalSum] = min1;
-
-                            }
-
-                        }
-
-                    }
+                    vertexGraph[i][j] = Short.MAX_VALUE;
+                    tmpGraph[i][j] = Short.MAX_VALUE;
 
                 }
 
@@ -85,26 +64,82 @@ public class DP {
 
         }
 
+        for(int i = 0; i < v; i++){
+
+            tmpGraph[i][0] = graph[i][0];
+
+        }
+
     }
 
-    public int getResult(){
+    public int algorithm(int startVertex, int vertexes){
 
-        setResult(Short.MAX_VALUE);
+        int tmpResult = Short.MAX_VALUE;
+        int visited;
 
-        for (int i = 0; i < v; i++) {            
-            
-            int min1 = graph[i][0] + tmpGraph[i][maxCount - 1];
+        if(tmpGraph[startVertex][vertexes] != -1 && tmpGraph[startVertex][vertexes] != Short.MAX_VALUE){
+            return tmpGraph[startVertex][vertexes];
+        }
 
-            if(min1 < result){
+        for(int i = 0; i < v; i++){
 
-                result = min1;
+            int mask = (1 << v) - (1 << i) - 1;
+            visited = vertexes & mask;
+
+            if(visited == vertexes)
+                continue;
+            else{
+
+                int actualCost = graph[startVertex][i] + algorithm(i, visited);
+
+                if(actualCost < tmpResult){
+
+                    tmpResult = actualCost;
+                    vertexGraph[startVertex][vertexes] = i;
+
+                }
 
             }
 
         }
 
-        return result;
+        tmpGraph[startVertex][vertexes] = tmpResult;
+
+        return tmpResult;
+
+    }
+
+    private void getResultPath(int startVertex, int vertexes){
+
+        if(vertexGraph[startVertex][vertexes] == -1 || vertexGraph[startVertex][vertexes] == Short.MAX_VALUE){
+            return;
+        }
+        else{
+
+            resultPath.append(vertexGraph[startVertex][vertexes] + "-");
+
+            int tmp = (1 << v) - (1 << vertexGraph[startVertex][vertexes]) - 1;
+            int visited = tmp & vertexes;
+
+            getResultPath(vertexGraph[startVertex][vertexes], visited);
+
+        }
+
+    }
+
+    public void computeAlgorithm(){
+
+        initializeGraph();
+
+        result = algorithm(0, (1 << v) - 2);
+
+        getResultPath(0, (1 << v) - 2);
+        resultPath.append("0");
+
+        System.out.println(result);
+        System.out.println(resultPath);
 
     }
 
 }
+

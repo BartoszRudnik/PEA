@@ -5,10 +5,12 @@ public class testUi {
     private boolean spr = true;
     private int[][] graph;
     private int vertex = 0;
+
     private final Data data = new Data();
     private FullSearch fullSearch = new FullSearch();
     private BranchBound branchBound = new BranchBound();
     private DP dP = new DP();
+    private DP newDynamic = new DP();
 
     public void show() {
 
@@ -126,18 +128,17 @@ public class testUi {
 
                 case 7:
 
-                    dP = new DP();
+                    newDynamic = new DP();
 
                     vertex = data.getV();
                     graph = data.getGraph();
-                    dP.setV(vertex);
-                    dP.setGraph(graph);
+
+                    newDynamic.setV(vertex);
+                    newDynamic.setGraph(graph);
 
                     if(data.checkGraph(graph)) {
 
-                        dP.algorithm();
-                        System.out.println(dP.getResult());
-                        //dP.getResultPath();
+                        newDynamic.computeAlgorithm();
 
                     }
 

@@ -253,7 +253,7 @@ public class BranchBound {
 
             if(i != finalPath.length - 1) {
 
-                System.out.print(" - ");
+                System.out.print("-");
 
             }
 
