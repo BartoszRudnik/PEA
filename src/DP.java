@@ -5,7 +5,6 @@ public class DP {
     private int [][] vertexGraph;
     private int v;
     private int graphLen;
-    private int result;
     private StringBuilder resultPath = new StringBuilder();
 
     public void setGraph(int [][] graph){
@@ -116,7 +115,7 @@ public class DP {
         }
         else{
 
-            resultPath.append(vertexGraph[startVertex][vertexes] + "-");
+            resultPath.append(vertexGraph[startVertex][vertexes]).append("-");
 
             int tmp = (1 << v) - (1 << vertexGraph[startVertex][vertexes]) - 1;
             int visited = tmp & vertexes;
@@ -131,7 +130,7 @@ public class DP {
 
         initializeGraph();
 
-        result = algorithm(0, (1 << v) - 2);
+        int result = algorithm(0, (1 << v) - 2);
 
         getResultPath(0, (1 << v) - 2);
         resultPath.append("0");
