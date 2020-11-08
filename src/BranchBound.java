@@ -175,22 +175,10 @@ public class BranchBound {
                         actualCost += graph[currPath[level - 1]][i];
 
                         //aktualizujemy wartosc ograniczenia
-                        if (level > 1) {
+                        int tmpBound = getSecondMinOfRow(graph,currPath[level - 1]) + getSecondMinOfRow(graph,i);
+                        tmpBound /= 2;
 
-                            int tmpBound = getMinOfRow(graph,currPath[level - 1]) + getSecondMinOfRow(graph,i);
-                            tmpBound /= 2;
-
-                            lowerBound -= tmpBound;
-
-                        }
-                        else {
-
-                            int tmpBound = getSecondMinOfRow(graph, currPath[level -1]) + getSecondMinOfRow(graph,i);
-                            tmpBound /= 2;
-
-                            lowerBound -= tmpBound;
-
-                        }
+                        lowerBound -= tmpBound;
 
                         //jesli aktualne ograniczenie jest mniejsze od aktualnego wyniku to
                         // kontynuujemy przeszukiwanie na nastepnym poziomie
